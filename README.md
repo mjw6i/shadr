@@ -1,5 +1,5 @@
 # shadr
-## (compute shader using go-gl/glfw)
+## (compute shader using [go-gl/glfw](https://github.com/go-gl/glfw))
 
 ### structure
 `main.go` contains intialisation\
