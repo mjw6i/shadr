@@ -26,7 +26,7 @@ const shaderSource = `
 		if (gl_LocalInvocationID.x >= 1 ) {
 			compare_and_swap(gl_GlobalInvocationID.x, gl_GlobalInvocationID.x - 1);
 		}
-		if (gl_LocalInvocationID.x < 16 - 1 ) {
+		if (gl_LocalInvocationID.x < gl_WorkGroupSize.x - 1 ) {
 			compare_and_swap(gl_GlobalInvocationID.x, gl_GlobalInvocationID.x + 1);
 		}
 	}
