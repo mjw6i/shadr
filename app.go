@@ -16,9 +16,9 @@ const shaderSource = `
 	};
 	void compare_and_swap(uint a, uint b) {
 		if (data_SSBO[a] > data_SSBO[b] + 1) {
-			int max = data_SSBO[a] / 20;
-			int diff = (data_SSBO[a] - data_SSBO[b]) / 2;
-			int t = (diff > max) ? max : diff;
+			uint max = data_SSBO[a] / 20;
+			uint diff = (data_SSBO[a] - data_SSBO[b]) / 2;
+			uint t = (diff > max) ? max : diff;
 			data_SSBO[a] -= t;
 			data_SSBO[b] += t;
 		}
