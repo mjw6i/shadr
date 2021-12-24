@@ -40,6 +40,16 @@ func main() {
 		panic(err)
 	}
 
+	var size int32
+	gl.GetIntegeri_v(gl.MAX_COMPUTE_WORK_GROUP_SIZE, 0, &size)
+	fmt.Println("Max local work group size x: ", size)
+	gl.GetIntegeri_v(gl.MAX_COMPUTE_WORK_GROUP_SIZE, 1, &size)
+	fmt.Println("Max local work group size y: ", size)
+	gl.GetIntegeri_v(gl.MAX_COMPUTE_WORK_GROUP_SIZE, 2, &size)
+	fmt.Println("Max local work group size z: ", size)
+	gl.GetIntegerv(gl.MAX_COMPUTE_SHARED_MEMORY_SIZE, &size)
+	fmt.Println("Shared memory: ", size)
+
 	gl.UseProgram(program)
 
 	app()
