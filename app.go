@@ -9,7 +9,7 @@ import (
 
 const shaderSource = `
 	#version 460
-	layout(local_size_x = 16, local_size_y = 1, local_size_z = 1) in;
+	layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 	layout(std430, binding = 3) buffer layoutName
 	{
 		uint data_SSBO[];
@@ -36,7 +36,8 @@ const shaderSource = `
 const uint32size = 4
 
 func app() {
-	frame := generate(16)
+	frame := generate(128)
+	firstSum := sum(frame)
 	fmt.Println(frame, sum(frame))
 
 	var ssbo uint32
@@ -51,12 +52,14 @@ func app() {
 		gl.GetNamedBufferSubData(ssbo, 0, len(frame)*uint32size, gl.Ptr(frame))
 		fmt.Println(frame, sum(frame))
 	}
+
+	fmt.Println(firstSum == sum(frame))
 }
 
-func sum(arr []uint32) int {
-	s := 0
+func sum(arr []uint32) int64 {
+	var s int64 = 0
 	for _, e := range arr {
-		s += int(e)
+		s += int64(e)
 	}
 
 	return s
