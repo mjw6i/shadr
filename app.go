@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/go-gl/gl/v4.6-core/gl"
 )
@@ -47,13 +48,15 @@ func app() {
 	gl.BindBufferBase(gl.SHADER_STORAGE_BUFFER, 3, ssbo)
 	gl.BindBuffer(gl.SHADER_STORAGE_BUFFER, 0) // unbind (wiki example, code works without defer here)
 
+	start := time.Now()
 	for i := 1; i <= 50; i++ {
 		gl.DispatchCompute(uint32(len(frame)), 1, 1)
 		gl.GetNamedBufferSubData(ssbo, 0, len(frame)*uint32size, gl.Ptr(frame))
-		fmt.Println(frame, sum(frame))
 	}
+	elapsed := time.Since(start)
 
-	fmt.Println(firstSum == sum(frame))
+	fmt.Println(frame, sum(frame))
+	fmt.Println(firstSum == sum(frame), elapsed)
 }
 
 func sum(arr []uint32) int64 {
