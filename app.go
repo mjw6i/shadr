@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/go-gl/gl/v4.6-core/gl"
 )
@@ -35,12 +36,7 @@ const shaderSource = `
 const uint32size = 4
 
 func app() {
-	frame := []uint32{
-		58, 83, 43, 72,
-		06, 18, 34, 90,
-		54, 89, 16, 44,
-		57, 53, 73, 87,
-	}
+	frame := generate(16)
 	fmt.Println(frame, sum(frame))
 
 	var ssbo uint32
@@ -64,4 +60,14 @@ func sum(arr []uint32) int {
 	}
 
 	return s
+}
+
+func generate(count int) []uint32 {
+	rand.Seed(7) // Fixed seed
+	a := make([]uint32, count)
+	for i := 0; i < count; i++ {
+		a[i] = rand.Uint32()
+	}
+
+	return a
 }
