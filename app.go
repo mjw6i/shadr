@@ -20,8 +20,9 @@ const shaderSource = `
 			uint max = data_SSBO[a] / 20;
 			uint diff = (data_SSBO[a] - data_SSBO[b]) / 2;
 			uint t = (diff > max) ? max : diff;
-			data_SSBO[a] -= t;
-			data_SSBO[b] += t;
+			// alternate memory regions instead of atomics?
+			atomicAdd(data_SSBO[a], -t);
+			atomicAdd(data_SSBO[b], t);
 		}
 	}
 	void main() {
