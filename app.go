@@ -39,7 +39,7 @@ const uint32size = 4
 
 func app() {
 	start := time.Now()
-	frame := generate(1024)
+	frame := generate(1024 * 1024)
 	fmt.Println("Pushing memory: ", len(frame)*uint32size)
 	firstSum := sum(frame)
 	elapsed := time.Since(start)
@@ -57,7 +57,7 @@ func app() {
 
 	start = time.Now()
 	for i := 1; i <= 1000; i++ {
-		gl.DispatchCompute(uint32(len(frame)), 1, 1)
+		gl.DispatchCompute(uint32(len(frame)/1024), 1, 1)
 		gl.GetNamedBufferSubData(ssbo, 0, len(frame)*uint32size, gl.Ptr(frame))
 	}
 	elapsed = time.Since(start)
