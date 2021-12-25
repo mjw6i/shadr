@@ -10,7 +10,7 @@ import (
 
 const shaderSource = `
 	#version 460
-	layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
+	layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 	layout(std430, binding = 3) buffer layoutName
 	{
 		uint data_SSBO[];
@@ -38,26 +38,31 @@ const shaderSource = `
 const uint32size = 4
 
 func app() {
-	frame := generate(128)
+	start := time.Now()
+	frame := generate(1024)
+	fmt.Println("Pushing memory: ", len(frame)*uint32size)
 	firstSum := sum(frame)
-	fmt.Println(frame, sum(frame))
+	elapsed := time.Since(start)
+	fmt.Println("Generation: ", elapsed)
 
+	start = time.Now()
 	var ssbo uint32
 	gl.GenBuffers(1, &ssbo)
 	gl.BindBuffer(gl.SHADER_STORAGE_BUFFER, ssbo)
 	gl.BufferData(gl.SHADER_STORAGE_BUFFER, len(frame)*uint32size, gl.Ptr(frame), gl.DYNAMIC_READ) // DYNAMIC_READ is expected usage for optimisation purposes
 	gl.BindBufferBase(gl.SHADER_STORAGE_BUFFER, 3, ssbo)
 	gl.BindBuffer(gl.SHADER_STORAGE_BUFFER, 0) // unbind (wiki example, code works without defer here)
+	elapsed = time.Since(start)
+	fmt.Println("Buffer: ", elapsed)
 
-	start := time.Now()
-	for i := 1; i <= 50; i++ {
+	start = time.Now()
+	for i := 1; i <= 1000; i++ {
 		gl.DispatchCompute(uint32(len(frame)), 1, 1)
 		gl.GetNamedBufferSubData(ssbo, 0, len(frame)*uint32size, gl.Ptr(frame))
 	}
-	elapsed := time.Since(start)
+	elapsed = time.Since(start)
 
-	fmt.Println(frame, sum(frame))
-	fmt.Println(firstSum == sum(frame), elapsed)
+	fmt.Println("Execution: ", firstSum == sum(frame), elapsed)
 }
 
 func sum(arr []uint32) int64 {
